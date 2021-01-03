@@ -56,3 +56,56 @@ def get_model(model_name, model_config, cpu_run,
     if not cpu_run:
         model = model.cuda()
     return model
+
+def get_model_config(model_name, args):
+    """ Code chooses a model based on name"""
+    if model_name == 'Tacotron2':
+        model_config = dict(
+            # optimization
+            mask_padding=args.mask_padding,
+            # audio
+            n_mel_channels=args.n_mel_channels,
+            # symbols
+            n_symbols=args.n_symbols,
+            symbols_embedding_dim=args.symbols_embedding_dim,
+            # encoder
+            encoder_kernel_size=args.encoder_kernel_size,
+            encoder_n_convolutions=args.encoder_n_convolutions,
+            encoder_embedding_dim=args.encoder_embedding_dim,
+            # attention
+            attention_rnn_dim=args.attention_rnn_dim,
+            attention_dim=args.attention_dim,
+            # attention location
+            attention_location_n_filters=args.attention_location_n_filters,
+            attention_location_kernel_size=args.attention_location_kernel_size,
+            # decoder
+            n_frames_per_step=args.n_frames_per_step,
+            decoder_rnn_dim=args.decoder_rnn_dim,
+            prenet_dim=args.prenet_dim,
+            max_decoder_steps=args.max_decoder_steps,
+            gate_threshold=args.gate_threshold,
+            p_attention_dropout=args.p_attention_dropout,
+            p_decoder_dropout=args.p_decoder_dropout,
+            # postnet
+            postnet_embedding_dim=args.postnet_embedding_dim,
+            postnet_kernel_size=args.postnet_kernel_size,
+            postnet_n_convolutions=args.postnet_n_convolutions,
+            decoder_no_early_stopping=args.decoder_no_early_stopping
+        )
+        return model_config
+    elif model_name == 'WaveGlow':
+        model_config = dict(
+            n_mel_channels=args.n_mel_channels,
+            n_flows=args.flows,
+            n_group=args.groups,
+            n_early_every=args.early_every,
+            n_early_size=args.early_size,
+            WN_config=dict(
+                n_layers=args.wn_layers,
+                kernel_size=args.wn_kernel_size,
+                n_channels=args.wn_channels
+            )
+        )
+        return model_config
+    else:
+        raise NotImplementedError(model_name)
