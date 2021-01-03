@@ -11,3 +11,11 @@ def model_parser(model_name, parser, add_help=False):
         return waveglow_parser(parser, add_help)
     else:
         raise NotImplementedError(model_name)
+
+def batchnorm_to_float(module):
+    """Converts batch norm to FP32"""
+    if isinstance(module, torch.nn.modules.batchnorm._BatchNorm):
+        module.float()
+    for child in module.children():
+        batchnorm_to_float(child)
+    return module
