@@ -19,3 +19,10 @@ def batchnorm_to_float(module):
     for child in module.children():
         batchnorm_to_float(child)
     return module
+
+def init_bn(module):
+    if isinstance(module, torch.nn.modules.batchnorm._BatchNorm):
+        if module.affine:
+            module.weight.data.uniform_()
+    for child in module.children():
+        init_bn(child)
